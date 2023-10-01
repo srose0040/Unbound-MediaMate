@@ -6,6 +6,10 @@
         xmlns:local="clr-namespace:Unbound_MediaMate"
         mc:Ignorable="d"
         Title="Unbound Media Mate" Height="300" Width="300" MinWidth="300" SizeToContent="WidthAndHeight"> <!--Adjusting window to scale to dimensions of content-->
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed"/>
+
+    </Window.CommandBindings>
     <Grid>
         
     </Grid>
