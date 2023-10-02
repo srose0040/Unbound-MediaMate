@@ -28,7 +28,7 @@ namespace Unbound_MediaMate
         private readonly MediaPlayer _mediaPlayer; // Provides media playback functionalities
         private bool isMediaPlayerPlaying = false;
         private bool isUserDraggingSlider = false;
-        const int kOne = 1;
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -45,9 +45,20 @@ namespace Unbound_MediaMate
             videoView.MediaPlayer = _mediaPlayer; // Connecting MediaPlayer logic to VideoView visual component
 
             DispatcherTimer timer = new DispatcherTimer(); // Initializing timer
-            timer.Interval = TimeSpan.FromSeconds(kOne); // Timer interval is 1 second
-            timer.Tick += timer_Tick; // Will create this method
+            timer.Interval = TimeSpan.FromSeconds(Constants.kOne); // Timer interval is 1 second
+            timer.Tick += Timer_Tick; // Will create this method
             timer.Start();
         }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if (_mediaPlayer.Media != null && _mediaPlayer.IsSeekable && !isUserDraggingSlider)
+            { // Statement above checks if theres a source, if there is any lenght to the video and that the slider is not being dragged
+                sliProgress.Minimum = Constants.kZero;
+                sliProgress.Maximum = _mediaPlayer.Length; // Length of media
+                sliProgress.Value = _mediaPlayer.Time; // Current elapsed time
+            }
+        }
+
     }
 }
