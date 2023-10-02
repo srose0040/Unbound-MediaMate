@@ -1,7 +1,9 @@
 ﻿using LibVLCSharp.Shared;
 using LibVLCSharp.WPF;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,6 +61,38 @@ namespace Unbound_MediaMate
                 sliProgress.Value = _mediaPlayer.Time; // Current elapsed time
             }
         }
+
+        private void Open_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog(); 
+            openFileDialog.Filter = "Media files (*.mp3;*.mpg;*.mpeg;*.mkv;*.mp4)|*.mp3;*.mpg;*.mpeg;*.mkv;*.mp4|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true) // If the user selects a file to open
+            {
+                try
+                {
+                    var mediaToPlay = new Media(_vlcLibrary, new Uri(openFileDialog.FileName));
+                    // Creating a new instance of "media" that points to the user chosen file ^^^
+                    _mediaPlayer.Media = mediaToPlay; // "Media" object is getting deliverd so it can be played back
+                    _mediaPlayer.Play(); // Play the selected media using VLC Library
+                }
+                catch (FileNotFoundException) 
+                {
+                    MessageBox.Show("The selected file was not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (Exception ex) // This will catch general exceptions, including those from LibVLCSharp
+                {
+                    MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+
+            }
+        }
+
 
     }
 }
