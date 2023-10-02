@@ -86,7 +86,8 @@ namespace Unbound_MediaMate
                 }
                 catch (Exception ex) // This will catch general exceptions, including those from LibVLCSharp
                 {
-                    MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); 
+                    // Adding exception message to string ^
                 }
 
 
