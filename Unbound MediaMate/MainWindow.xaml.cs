@@ -30,7 +30,9 @@ namespace Unbound_MediaMate
         private readonly MediaPlayer _mediaPlayer; // Provides media playback functionalities
         private bool isMediaPlayerPlaying = false;
         private bool isUserDraggingSlider = false;
-        
+        private int lastVolumeLevel = Constants.kHalfVolume; // Defaulting volume to an acceptable level
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -93,6 +95,54 @@ namespace Unbound_MediaMate
 
             }
         }
+
+        private void Play_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false; // Initialize to false as a safe default
+
+            if (_mediaPlayer != null && _mediaPlayer.Media != null)
+            { // If the media player has been initialized and there is a media source loaded
+                e.CanExecute = true;
+            }
+            
+        }
+
+        private void Play_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                // State Checking: If media player is not playing, attempt to play
+                if (_mediaPlayer.State != VLCState.Playing)
+                {
+                    // User Feedback: Display a loading or buffering message
+                    statusLabel.Content = "Loading..."; 
+
+                    _mediaPlayer.Play(); // Play media
+
+                    // Volume: Set to the last known volume level
+                    _mediaPlayer.Volume = lastVolumeLevel; 
+
+                    isMediaPlayerPlaying = true; // Media player is playing
+
+                    // User Feedback: Clear loading message or update status
+                    statusLabel.Content = "Playing";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Error Handling: Inform the user of the error
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            _mediaPlayer.Volume = (int)e.NewValue; // Set the volume in the media player
+            lastVolumeLevel = (int)e.NewValue; // Update last volume level.
+        }
+
+
+
 
 
     }

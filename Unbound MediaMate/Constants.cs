@@ -10,5 +10,6 @@ namespace Unbound_MediaMate
     {
         public const int kZero = 0;
         public const int kOne = 1;
+        public const int kHalfVolume = 50; // Default for initial volume
     }
 }

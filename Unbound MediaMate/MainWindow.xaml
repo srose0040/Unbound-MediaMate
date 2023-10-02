@@ -18,7 +18,21 @@
 
         <StatusBarItem Grid.Column="1" HorizontalContentAlignment="Stretch">
             <Slider x:Name="sliProgress" Minimum="0" Maximum="1" Value="0" TickFrequency="1000" SmallChange="1000" /> <!--Handling values in milliseconds-->
+            
 
         </StatusBarItem>
+        <StatusBarItem Grid.Column="2" HorizontalContentAlignment="Stretch">
+            <Slider Name="volumeSlider" Maximum="100" ValueChanged="VolumeSlider_ValueChanged" /> <!--Lets User Slide Volume-->
+
+
+
+        </StatusBarItem>
+
+        <Label Name="statusLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Stopped"/> <!--User FeedBack Object-->
+
+
+
+
+
     </Grid>
 </Window>
