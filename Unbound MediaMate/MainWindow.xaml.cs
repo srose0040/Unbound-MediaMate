@@ -135,6 +135,74 @@ namespace Unbound_MediaMate
             }
         }
 
+        private void Pause_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        { // If the media is playing then it can be paused, else no. 
+            e.CanExecute = (_mediaPlayer != null) && (_mediaPlayer.State == VLCState.Playing);
+        }
+
+        private void Pause_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                // Check if the media player is currently playing
+                if (_mediaPlayer.State == VLCState.Playing)
+                {
+                    _mediaPlayer.Pause();
+                    isMediaPlayerPlaying = false;
+                    statusLabel.Content = "Paused";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Error Handling: Inform the user of the error
+                MessageBox.Show($"An error occurred while trying to pause: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void Stop_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        { // if there is media loaded and it is either playing or paused then the event can execute
+            e.CanExecute = (_mediaPlayer != null) && (_mediaPlayer.State == VLCState.Playing || _mediaPlayer.State == VLCState.Paused);
+        }
+
+        private void Stop_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            const int kDefaultProgress = 0; // The default slide bar progress when videos are stopped
+            try
+            {
+                // Stop the media player
+                _mediaPlayer.Stop();
+                isMediaPlayerPlaying = false;
+
+                // Reset the progress 
+                sliProgress.Value = kDefaultProgress;
+                statusLabel.Content = "Stopped";
+            }
+            catch (Exception ex)
+            {
+                // Inform the user of the error
+                MessageBox.Show($"An error occurred while trying to stop: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void Grid_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            int volumeChangeAmount = 10;  // Represents a 10% change in volume. Adjust this value as needed.
+
+            if (e.Delta > 0)  // If mouse wheel scrolled forward/upward
+            {
+                // Increase volume but don't exceed 100
+                _mediaPlayer.Volume = Math.Min(_mediaPlayer.Volume + volumeChangeAmount, 100);
+            }
+            else  // If mouse wheel scrolled backward/downward
+            {
+                // Decrease volume but don't go below 0
+                _mediaPlayer.Volume = Math.Max(_mediaPlayer.Volume - volumeChangeAmount, 0);
+            }
+        }
+
+
+
+
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             _mediaPlayer.Volume = (int)e.NewValue; // Set the volume in the media player

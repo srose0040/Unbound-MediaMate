@@ -11,12 +11,34 @@
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed"/>
         <CommandBinding Command="MediaCommands.Play" CanExecute="Play_CanExecute" Executed="Play_Executed" />
+        <CommandBinding Command="MediaCommands.Pause" CanExecute="Pause_CanExecute" Executed="Pause_Executed" />
+        <CommandBinding Command="MediaCommands.Stop" CanExecute="Stop_CanExecute" Executed="Stop_Executed" />
 
     </Window.CommandBindings>
-    <Grid>
+    <Grid MouseWheel="MouseWheel">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ToolBar>
+            <Button Command="ApplicationCommands.Open">
+                <Image Source="/WpfTutorialSamples;component/Images/folder.png" />
+            </Button>
+            <Separator />
+            <Button Command="MediaCommands.Play">
+                <Image Source="/images/play.jpg" />
+            </Button>
+            <Button Command="MediaCommands.Pause">
+                <Image Source="/images/pause.jpg" />
+            </Button>
+            <Button Command="MediaCommands.Stop">
+                <Image Source="/images/stop.jpg" />
+            </Button>
+        </ToolBar>
         <vlc:VideoView x:Name="videoView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" /> <!--Works with VLC library-->
 
-        <StatusBarItem Grid.Column="1" HorizontalContentAlignment="Stretch">
+        <StatusBarItem Grid.Column="2" HorizontalContentAlignment="Stretch">
             <Slider x:Name="sliProgress" Minimum="0" Maximum="1" Value="0" TickFrequency="1000" SmallChange="1000" /> <!--Handling values in milliseconds-->
             
 
