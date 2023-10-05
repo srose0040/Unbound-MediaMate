@@ -15,42 +15,58 @@
         <CommandBinding Command="MediaCommands.Stop" CanExecute="Stop_CanExecute" Executed="Stop_Executed" />
 
     </Window.CommandBindings>
-    <Grid MouseWheel="MouseWheel">
+    <Grid MouseWheel="Grid_MouseWheel">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ToolBar>
-            <Button Command="ApplicationCommands.Open">
-                <Image Source="/images/open.png" />
+            <Button Width="40" Height="40" Padding="5" Command="ApplicationCommands.Open">
+                <Image Source="/open.png" />
             </Button>
             <Separator />
-            <Button Command="MediaCommands.Play">
-                <Image Source="/Unbound MediaMate;component/images/play.jpg" />
+            <Button Width="40" Height="40" Padding="5" Command="MediaCommands.Play">
+                <Image Source="/play.jpg" />
             </Button>
-            <Button Command="MediaCommands.Pause">
-                <Image Source="/images/pause.png" />
+            <Button Width="40" Height="40" Padding="5" Command="MediaCommands.Pause">
+                <Image Source="/pause.png" />
             </Button>
-            <Button Command="MediaCommands.Stop">
-                <Image Source="/images/stop.png" />
+            <Button Width="40" Height="40" Padding="5" Command="MediaCommands.Stop">
+                <Image Source="/stop.png" />
             </Button>
         </ToolBar>
+        
         <vlc:VideoView x:Name="videoView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" /> <!--Works with VLC library-->
 
-        <StatusBarItem Grid.Column="2" HorizontalContentAlignment="Stretch">
-            <Slider x:Name="sliProgress" Minimum="0" Maximum="1" Value="0" TickFrequency="1000" SmallChange="1000" /> <!--Handling values in milliseconds-->
-            
+        <StatusBar Grid.Row="2">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem>
+                <TextBlock Name="lblProgressStatus">00:00:00</TextBlock>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="1" HorizontalContentAlignment="Stretch">
+                <Slider x:Name="sliProgress" Minimum="0" Maximum="1" Value="0" TickFrequency="1000" SmallChange="1000" />
+                <!--Handling values in milliseconds-->
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="2" HorizontalContentAlignment="Stretch">
+                <Slider Name="volumeSlider" Maximum="100" ValueChanged="VolumeSlider_ValueChanged" />
+                <!--Lets User Slide Volume-->
+            </StatusBarItem>
+            <Label Name="statusLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Stopped"/>
+            <!--User FeedBack Object-->
+        </StatusBar>
 
-        </StatusBarItem>
-        <StatusBarItem Grid.Column="2" HorizontalContentAlignment="Stretch">
-            <Slider Name="volumeSlider" Maximum="100" ValueChanged="VolumeSlider_ValueChanged" /> <!--Lets User Slide Volume-->
-
-
-
-        </StatusBarItem>
-
-        <Label Name="statusLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Stopped"/> <!--User FeedBack Object-->
+        
 
 
 
@@ -58,3 +74,4 @@
 
     </Grid>
 </Window>
+
