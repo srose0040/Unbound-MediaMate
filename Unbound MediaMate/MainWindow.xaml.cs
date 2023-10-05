@@ -186,17 +186,18 @@ namespace Unbound_MediaMate
 
         private void Grid_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            int volumeChangeAmount = 10;  // Represents a 10% change in volume. Adjust this value as needed.
+            int volumeChangeAmount = 5;  // Represents a 5% change in volume. 
+            const int kDefaultMouseScrollValue = 0; // Numeric value that determins if a mouse has scrolled or not
 
-            if (e.Delta > 0)  // If mouse wheel scrolled forward/upward
+            if (e.Delta > kDefaultMouseScrollValue)  // If mouse wheel scrolled forward/upward
             {
                 // Increase volume but don't exceed 100
-                _mediaPlayer.Volume = Math.Min(_mediaPlayer.Volume + volumeChangeAmount, 100);
+                _mediaPlayer.Volume = Math.Min(_mediaPlayer.Volume + volumeChangeAmount, Constants.kFullVolume);
             }
             else  // If mouse wheel scrolled backward/downward
             {
                 // Decrease volume but don't go below 0
-                _mediaPlayer.Volume = Math.Max(_mediaPlayer.Volume - volumeChangeAmount, 0);
+                _mediaPlayer.Volume = Math.Max(_mediaPlayer.Volume - volumeChangeAmount, Constants.kMinVolume);
             }
         }
 

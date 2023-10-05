@@ -23,17 +23,17 @@
         </Grid.RowDefinitions>
         <ToolBar>
             <Button Command="ApplicationCommands.Open">
-                <Image Source="/WpfTutorialSamples;component/Images/folder.png" />
+                <Image Source="/images/open.png" />
             </Button>
             <Separator />
             <Button Command="MediaCommands.Play">
-                <Image Source="/images/play.jpg" />
+                <Image Source="/Unbound MediaMate;component/images/play.jpg" />
             </Button>
             <Button Command="MediaCommands.Pause">
-                <Image Source="/images/pause.jpg" />
+                <Image Source="/images/pause.png" />
             </Button>
             <Button Command="MediaCommands.Stop">
-                <Image Source="/images/stop.jpg" />
+                <Image Source="/images/stop.png" />
             </Button>
         </ToolBar>
         <vlc:VideoView x:Name="videoView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" /> <!--Works with VLC library-->
