@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Unbound_MediaMate"
         mc:Ignorable="d"
-        Title="Unbound Media Mate" Height="300" Width="300" MinWidth="300" SizeToContent="WidthAndHeight"> 
+        Title="Unbound Media Mate" Height="800" Width="800" MinWidth="300" SizeToContent="WidthAndHeight"> 
         <!--Adjusting window to scale to dimensions of content-->
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed"/>
@@ -22,22 +22,25 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ToolBar>
-            <Button Width="40" Height="40" Padding="5" Command="ApplicationCommands.Open">
+            <Button Width="100" Height="100" Padding="5" Command="ApplicationCommands.Open" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Image Source="/open.png" />
             </Button>
             <Separator />
-            <Button Width="40" Height="40" Padding="5" Command="MediaCommands.Play">
+            <Button Width="100" Height="100" Padding="5" Command="MediaCommands.Play" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Image Source="/play.jpg" />
             </Button>
-            <Button Width="40" Height="40" Padding="5" Command="MediaCommands.Pause">
+            <Button Width="100" Height="100" Padding="5" Command="MediaCommands.Pause" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Image Source="/pause.png" />
             </Button>
-            <Button Width="40" Height="40" Padding="5" Command="MediaCommands.Stop">
+            <Button Width="100" Height="100" Padding="5" Command="MediaCommands.Stop" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Image Source="/stop.png" />
             </Button>
+            <Label Name="statusLabel" Width="300"  Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Stopped" />
         </ToolBar>
         
         <vlc:VideoView x:Name="videoView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" /> <!--Works with VLC library-->
+        <Image x:Name="defaultImage" Grid.Row="1" Source="/frutiger.png" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
 
         <StatusBar Grid.Row="2">
             <StatusBar.ItemsPanel>
@@ -55,14 +58,11 @@
                 <TextBlock Name="lblProgressStatus">00:00:00</TextBlock>
             </StatusBarItem>
             <StatusBarItem Grid.Column="1" HorizontalContentAlignment="Stretch">
-                <Slider x:Name="sliProgress" Minimum="0" Maximum="1" Value="0" TickFrequency="1000" SmallChange="1000" />
+                <Slider x:Name="sliProgress" Thumb.DragStarted="sliProgress_DragStarted"  Thumb.DragCompleted="sliProgress_DragCompleted" ValueChanged="sliProgress_ValueChanged" 
+                        Minimum="0" Maximum="1" Value="0" TickFrequency="1000" SmallChange="1000" />
                 <!--Handling values in milliseconds-->
             </StatusBarItem>
-            <StatusBarItem Grid.Column="2" HorizontalContentAlignment="Stretch">
-                <Slider Name="volumeSlider" Maximum="100" ValueChanged="VolumeSlider_ValueChanged" />
-                <!--Lets User Slide Volume-->
-            </StatusBarItem>
-            <Label Name="statusLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Stopped"/>
+            
             <!--User FeedBack Object-->
         </StatusBar>
 

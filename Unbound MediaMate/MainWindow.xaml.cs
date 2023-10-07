@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -46,6 +47,10 @@ namespace Unbound_MediaMate
             // Create new MediaPlayer instance
             _mediaPlayer = new MediaPlayer(_vlcLibrary);
 
+            // Unsubscribe and then subscribe to the Playing event so the event handler is not called multiple times for a single event occurrence.
+            _mediaPlayer.Playing -= MediaPlayer_Playing;
+            _mediaPlayer.Playing += MediaPlayer_Playing;
+
             videoView.MediaPlayer = _mediaPlayer; // Connecting MediaPlayer logic to VideoView visual component
 
             DispatcherTimer timer = new DispatcherTimer(); // Initializing timer
@@ -72,7 +77,8 @@ namespace Unbound_MediaMate
         private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog(); 
-            openFileDialog.Filter = "Media files (*.mp3;*.mpg;*.mpeg;*.mkv;*.mp4)|*.mp3;*.mpg;*.mpeg;*.mkv;*.mp4|All files (*.*)|*.*";
+            openFileDialog.Filter = "Media files (*.mp3;*.mpg;*.mpeg;*.mkv;*.mp4;*.wav;*.flac;*.aac;*.ogg;*.wma;.avi;*.mov;*.flv;*.3gp;*.vob;*.srt;*.sub;*.ass)" +
+                "|*.mp3;*.mpg;*.mpeg;*.mkv;*.mp4;*.wav;*.flac;*.aac;*.ogg;*.wma;.avi;*.mov;*.flv;*.3gp;*.vob;*.srt;*.sub;*.ass|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true) // If the user selects a file to open
             {
                 try
@@ -80,6 +86,11 @@ namespace Unbound_MediaMate
                     var mediaToPlay = new Media(_vlcLibrary, new Uri(openFileDialog.FileName));
                     // Creating a new instance of "media" that points to the user chosen file ^^^
                     _mediaPlayer.Media = mediaToPlay; // "Media" object is getting deliverd so it can be played back
+
+                    // Unsubscribe and then subscribe to the Playing event so the event handler is not called multiple times for a single event occurrence.
+                    _mediaPlayer.Playing -= MediaPlayer_Playing;
+                    _mediaPlayer.Playing += MediaPlayer_Playing;
+
                     _mediaPlayer.Play(); // Play the selected media using VLC Library
                 }
                 catch (FileNotFoundException) 
@@ -134,6 +145,52 @@ namespace Unbound_MediaMate
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void MediaPlayer_Playing(object sender, EventArgs e)
+        {
+            // These variables keep track of the presence of video and audio tracks
+            bool hasVideo = false;
+            bool hasAudio = false;
+
+            // Iterate through each of the tracks present in the media being played
+            foreach (var track in _mediaPlayer.Media.Tracks)
+            {
+                // If its a video
+                if (track.TrackType == TrackType.Video)
+                {
+                    hasVideo = true;
+                }
+                else if (track.TrackType == TrackType.Audio) // or audio
+                {
+                    hasAudio = true;
+                }
+            }
+
+            // Use the Dispatcher to run the code on the UI thread ensuring that any operations inside that code block that modify the UI are safe
+            Dispatcher.Invoke(() =>
+            {
+
+                if (hasVideo)
+            {
+                // If the media has video, display the video and hide the default image
+                videoView.Visibility = Visibility.Visible;
+                defaultImage.Visibility = Visibility.Collapsed;
+            }
+            else if (hasAudio)
+            {
+                // If the media only has audio, hide the video view and display the default image
+                videoView.Visibility = Visibility.Collapsed;
+                defaultImage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Neither video nor audio tracks were detected
+                MessageBox.Show("The media doesn't contain recognizable audio or video tracks.", "Media Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
+            });
+        }
+        
 
         private void Pause_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         { // If the media is playing then it can be paused, else no. 
@@ -201,14 +258,25 @@ namespace Unbound_MediaMate
             }
         }
 
-
-
-
-        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void sliProgress_DragStarted(object sender, DragStartedEventArgs e)
         {
-            _mediaPlayer.Volume = (int)e.NewValue; // Set the volume in the media player
-            lastVolumeLevel = (int)e.NewValue; // Update last volume level.
+            isUserDraggingSlider = true;
         }
+
+        private void sliProgress_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            // Resetting slider drag to false
+            isUserDraggingSlider = false;
+            // The position of the slider is now new position in time for the media
+            _mediaPlayer.Time = (long)sliProgress.Value;
+        }
+
+        private void sliProgress_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            // Updates the label to show the current playback time in a format of hours:minutes:seconds based on the value of the sliProgress slider
+            lblProgressStatus.Text = TimeSpan.FromMilliseconds(sliProgress.Value).ToString(@"hh\:mm\:ss");
+        }
+
 
 
 
