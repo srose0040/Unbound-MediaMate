@@ -37,8 +37,8 @@
             </Button>
             <Label Name="statusLabel" Width="300"  Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Stopped" />
         </ToolBar>
-        
-        <vlc:VideoView x:Name="videoView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" /> <!--Works with VLC library-->
+
+        <vlc:VideoView x:Name="videoView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1"/> <!--Works with VLC library-->
         <Image x:Name="defaultImage" Grid.Row="1" Source="/frutiger.png" Width="900" Height="600" Visibility="Collapsed"/>
 
 
