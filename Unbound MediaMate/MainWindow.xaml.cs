@@ -51,6 +51,8 @@ namespace Unbound_MediaMate
             _mediaPlayer.Playing -= MediaPlayer_Playing;
             _mediaPlayer.Playing += MediaPlayer_Playing;
 
+
+
             videoView.MediaPlayer = _mediaPlayer; // Connecting MediaPlayer logic to VideoView visual component
 
             DispatcherTimer timer = new DispatcherTimer(); // Initializing timer
@@ -148,6 +150,7 @@ namespace Unbound_MediaMate
             // These variables keep track of the presence of video and audio tracks
             bool hasVideo = false;
             bool hasAudio = false;
+            var videoTracks = _mediaPlayer.Media.Tracks.OfType<VideoTrack>().ToList();
 
             // Iterate through each of the tracks present in the media being played
             foreach (var track in _mediaPlayer.Media.Tracks)
@@ -156,6 +159,7 @@ namespace Unbound_MediaMate
                 if (track.TrackType == TrackType.Video)
                 {
                     hasVideo = true;
+     
                 }
                 else if (track.TrackType == TrackType.Audio) // or audio
                 {
@@ -172,9 +176,9 @@ namespace Unbound_MediaMate
                 // If the media has video, display the video and hide the default image
                 defaultImage.Visibility = Visibility.Collapsed;
                 videoView.Visibility = Visibility.Visible;
-                
+
             }
-            else if (hasAudio)
+            else if (hasAudio && !hasVideo)
             {
                 // If the media only has audio, hide the video view and display the default image
                 videoView.Visibility = Visibility.Collapsed;
@@ -188,7 +192,6 @@ namespace Unbound_MediaMate
 
             });
         }
-        
 
         private void Pause_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         { // If the media is playing then it can be paused, else no. 
