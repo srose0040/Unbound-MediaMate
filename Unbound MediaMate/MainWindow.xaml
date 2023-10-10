@@ -15,10 +15,10 @@
         <CommandBinding Command="MediaCommands.Stop" CanExecute="Stop_CanExecute" Executed="Stop_Executed" />
 
     </Window.CommandBindings>
-    <Grid MouseWheel="Grid_MouseWheel">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="*" /> <!-- This row should take up all available space -->
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ToolBar>
@@ -39,7 +39,7 @@
         </ToolBar>
         
         <vlc:VideoView x:Name="videoView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" /> <!--Works with VLC library-->
-        <Image x:Name="defaultImage" Grid.Row="1" Source="/frutiger.png" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <Image x:Name="defaultImage" Grid.Row="1" Source="/frutiger.png" Width="900" Height="600" Visibility="Collapsed"/>
 
 
         <StatusBar Grid.Row="2">

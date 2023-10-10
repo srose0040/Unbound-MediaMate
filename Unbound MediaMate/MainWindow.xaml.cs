@@ -31,7 +31,7 @@ namespace Unbound_MediaMate
         private readonly MediaPlayer _mediaPlayer; // Provides media playback functionalities
         private bool isMediaPlayerPlaying = false;
         private bool isUserDraggingSlider = false;
-        private int lastVolumeLevel = Constants.kHalfVolume; // Defaulting volume to an acceptable level
+        private int lastVolumeLevel;
 
 
         public MainWindow()
@@ -87,11 +87,9 @@ namespace Unbound_MediaMate
                     // Creating a new instance of "media" that points to the user chosen file ^^^
                     _mediaPlayer.Media = mediaToPlay; // "Media" object is getting deliverd so it can be played back
 
-                    // Unsubscribe and then subscribe to the Playing event so the event handler is not called multiple times for a single event occurrence.
-                    _mediaPlayer.Playing -= MediaPlayer_Playing;
-                    _mediaPlayer.Playing += MediaPlayer_Playing;
-
-                    _mediaPlayer.Play(); // Play the selected media using VLC Library
+                    lastVolumeLevel = _mediaPlayer.Volume; // Remembering volume level
+                    Play_Executed(sender, e); // Calling play method
+                    
                 }
                 catch (FileNotFoundException) 
                 {
@@ -109,13 +107,12 @@ namespace Unbound_MediaMate
 
         private void Play_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = false; // Initialize to false as a safe default
-
-            if (_mediaPlayer != null && _mediaPlayer.Media != null)
-            { // If the media player has been initialized and there is a media source loaded
-                e.CanExecute = true;
-            }
-            
+            // If the media player has been initialized and there is a media source loaded
+            e.CanExecute = (_mediaPlayer != null) &&
+                   (_mediaPlayer.Media != null) &&
+                   (_mediaPlayer.State != VLCState.Playing &&
+                    _mediaPlayer.State != VLCState.Buffering &&
+                    _mediaPlayer.State != VLCState.Opening);
         }
 
         private void Play_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -218,7 +215,10 @@ namespace Unbound_MediaMate
 
         private void Stop_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         { // if there is media loaded and it is either playing or paused then the event can execute
-            e.CanExecute = (_mediaPlayer != null) && (_mediaPlayer.State == VLCState.Playing || _mediaPlayer.State == VLCState.Paused);
+            e.CanExecute = (_mediaPlayer != null) &&
+                    (_mediaPlayer.State != VLCState.Stopped &&
+                     _mediaPlayer.State != VLCState.Buffering &&
+                     _mediaPlayer.State != VLCState.Opening && _mediaPlayer.State != VLCState.NothingSpecial);
         }
 
         private void Stop_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -241,6 +241,7 @@ namespace Unbound_MediaMate
             }
         }
 
+        /* REMOVED FROM FINAL PROJECT
         private void Grid_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             int volumeChangeAmount = 5;  // Represents a 5% change in volume. 
@@ -256,7 +257,7 @@ namespace Unbound_MediaMate
                 // Decrease volume but don't go below 0
                 _mediaPlayer.Volume = Math.Max(_mediaPlayer.Volume - volumeChangeAmount, Constants.kMinVolume);
             }
-        }
+        } */
 
         private void sliProgress_DragStarted(object sender, DragStartedEventArgs e)
         {
