@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Unbound_MediaMate"
         mc:Ignorable="d"
-        Title="Unbound Media Mate" Height="800" Width="800" MinWidth="300" > 
+        Title="Unbound Media Mate" Icon="/unboundLOGO.png" Height="800" Width="800" MinWidth="300" > 
         <!--Adjusting window to scale to dimensions of content-->
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed"/>
@@ -15,7 +15,7 @@
         <CommandBinding Command="MediaCommands.Stop" CanExecute="Stop_CanExecute" Executed="Stop_Executed" />
 
     </Window.CommandBindings>
-    <Grid Background="Black">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" /> <!-- This row should take up all available space -->
@@ -37,7 +37,9 @@
             </Button>
             <Label Name="statusLabel" Width="300"  Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Stopped" />
         </ToolBar>
-
+        
+        
+        <Rectangle Grid.Row="1" Fill="Black"/> <!-- For aesthetic purposes-->
         <Image x:Name="defaultImage" Grid.Row="1" Source="/frutiger.png" Width="900" Height="600" Visibility="Collapsed"/>
         <vlc:VideoView x:Name="videoView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1"/>
         <!--Works with VLC library-->
