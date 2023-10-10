@@ -167,11 +167,12 @@ namespace Unbound_MediaMate
             Dispatcher.Invoke(() =>
             {
 
-                if (hasVideo)
+            if (hasVideo)
             {
                 // If the media has video, display the video and hide the default image
-                videoView.Visibility = Visibility.Visible;
                 defaultImage.Visibility = Visibility.Collapsed;
+                videoView.Visibility = Visibility.Visible;
+                
             }
             else if (hasAudio)
             {
@@ -274,6 +275,10 @@ namespace Unbound_MediaMate
 
         private void sliProgress_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (isUserDraggingSlider)
+            {
+                _mediaPlayer.Time = (long)sliProgress.Value; // Supports clicking positions on the slider
+            }
             // Updates the label to show the current playback time in a format of hours:minutes:seconds based on the value of the sliProgress slider
             lblProgressStatus.Text = TimeSpan.FromMilliseconds(sliProgress.Value).ToString(@"hh\:mm\:ss");
         }
