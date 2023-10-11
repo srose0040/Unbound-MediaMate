@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+ * Filename:	Constants.cs
+ * Project:		Unbound MediaMate
+ * By:			Saje Antoine Rose
+ * Date:		October, 11, 2023
+ * Description:	This source file contains many constants used throughout this program.
+*/
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

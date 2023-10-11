@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Unbound_MediaMate"
         mc:Ignorable="d"
         Title="Unbound Media Mate" Icon="/unboundLOGO.png" Height="800" Width="800" MinWidth="300" > 
-        <!--Adjusting window to scale to dimensions of content-->
+        
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed"/>
         <CommandBinding Command="MediaCommands.Play" CanExecute="Play_CanExecute" Executed="Play_Executed" />
@@ -37,13 +37,11 @@
             </Button>
             <Label Name="statusLabel" Width="300"  Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Stopped" />
         </ToolBar>
-        
-        
+
         <Rectangle Grid.Row="1" Fill="Black"/> <!-- For aesthetic purposes-->
         <Image x:Name="defaultImage" Grid.Row="1" Source="/frutiger.png" Width="900" Height="600" Visibility="Collapsed"/>
         <vlc:VideoView x:Name="videoView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1"/>
         <!--Works with VLC library-->
-
 
         <StatusBar Grid.Row="2">
             <StatusBar.ItemsPanel>
@@ -65,16 +63,9 @@
                         Minimum="0" Maximum="1" Value="0" TickFrequency="1000" SmallChange="1000" />
                 <!--Handling values in milliseconds-->
             </StatusBarItem>
-            
+
             <!--User FeedBack Object-->
         </StatusBar>
-
-        
-
-
-
-
-
     </Grid>
 </Window>
 
