@@ -1,4 +1,13 @@
-﻿using LibVLCSharp.Shared;
+﻿/*
+ * Filename:	MainWindow.xaml.cs
+ * Project:		Unbound MediaMate
+ * By:			Saje Antoine Rose
+ * Date:		October, 10, 2023
+ * Description:	This source file contains the constructor for the MainWindow Class and the logic behind the many uses of the media player.
+*/
+
+
+using LibVLCSharp.Shared;
 using LibVLCSharp.WPF;
 using Microsoft.Win32;
 using System;
@@ -22,9 +31,12 @@ using MediaPlayer = LibVLCSharp.Shared.MediaPlayer; // Using vlc's Media Player 
 
 namespace Unbound_MediaMate
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    /*
+     * Class Name:	MainWindow
+     * Purpose:		The purpose of this class is to provide the data members and logic necessary to facilitate the usage of the media player.
+     * By:			Saje Antoine Rose
+     * Abilities:	This class initializes its data members, allows access to its methods and handles UI related events.
+     */
     public partial class MainWindow : Window
     {
         private readonly LibVLC _vlcLibrary; // Required for library operations. Initializes VLC Engine.
@@ -33,7 +45,11 @@ namespace Unbound_MediaMate
         private bool isUserDraggingSlider = false;
         private int lastVolumeLevel;
 
-
+        /*
+        * Constructor: MainWindow()
+        * Description: This constructor initializes the media player for use.
+        * Parameters:  Void.
+        */
         public MainWindow()
         {
             InitializeComponent();
@@ -57,10 +73,18 @@ namespace Unbound_MediaMate
 
             DispatcherTimer timer = new DispatcherTimer(); // Initializing timer
             timer.Interval = TimeSpan.FromSeconds(Constants.kOne); // Timer interval is 1 second
-            timer.Tick += Timer_Tick; // Will create this method
+            timer.Tick += Timer_Tick; 
             timer.Start();
         }
 
+
+        /*
+        * Method:      Timer_Tick()
+        * Description: This method sets the min and max values for the progress slider and sets the sliders value to the videos current time
+        * Parameters:  object sender: The object that raised the event
+        *              EventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void Timer_Tick(object sender, EventArgs e)
         {
             if (_mediaPlayer.Media != null && _mediaPlayer.IsSeekable && !isUserDraggingSlider)
@@ -71,11 +95,29 @@ namespace Unbound_MediaMate
             }
         }
 
+
+
+       /*
+        * Method:      Open_CanExecute()
+        * Description: This method allows the open event to execute
+        * Parameters:  object sender: The object that raised the event
+        *              CanExecuteRoutedEventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void Open_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }
 
+
+
+        /*
+        * Method:      Open_Executed()
+        * Description: This method contains the logic behind the opening of new media.
+        * Parameters:  object sender: The object that raised the event
+        *              ExecutedRoutedEventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog(); 
@@ -107,6 +149,14 @@ namespace Unbound_MediaMate
             }
         }
 
+
+        /*
+        * Method:      Play_CanExecute()
+        * Description: This method allows the play event to execute
+        * Parameters:  object sender: The object that raised the event
+        *              CanExecuteRoutedEventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void Play_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             // If the media player has been initialized and there is a media source loaded
@@ -117,6 +167,14 @@ namespace Unbound_MediaMate
                     _mediaPlayer.State != VLCState.Opening);
         }
 
+
+        /*
+        * Method:      Play_Executed()
+        * Description: This method contains the logic behind the execution of new media.
+        * Parameters:  object sender: The object that raised the event
+        *              ExecutedRoutedEventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void Play_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             try
@@ -145,6 +203,14 @@ namespace Unbound_MediaMate
             }
         }
 
+
+        /*
+        * Method:      MediaPlayer_Playing()
+        * Description: This method attempts to determine if the user is playing an audio or video track then either shows the video or default audio image
+        * Parameters:  object sender: The object that raised the event
+        *              EventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void MediaPlayer_Playing(object sender, EventArgs e)
         {
             // These variables keep track of the presence of video and audio tracks
@@ -193,11 +259,27 @@ namespace Unbound_MediaMate
             });
         }
 
+
+        /*
+        * Method:      Pause_CanExecute()
+        * Description: This method allows the pause event to execute
+        * Parameters:  object sender: The object that raised the event
+        *              CanExecuteRoutedEventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void Pause_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         { // If the media is playing then it can be paused, else no. 
             e.CanExecute = (_mediaPlayer != null) && (_mediaPlayer.State == VLCState.Playing);
         }
 
+
+        /*
+        * Method:      Pause_Executed()
+        * Description: This method contains the logic behind the pausing of media.
+        * Parameters:  object sender: The object that raised the event
+        *              ExecutedRoutedEventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void Pause_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             try
@@ -217,6 +299,14 @@ namespace Unbound_MediaMate
             }
         }
 
+
+        /*
+        * Method:      Stop_CanExecute()
+        * Description: This method allows the stop event to execute
+        * Parameters:  object sender: The object that raised the event
+        *              CanExecuteRoutedEventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void Stop_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         { // if there is media loaded and it is either playing or paused then the event can execute
             e.CanExecute = (_mediaPlayer != null) &&
@@ -225,6 +315,14 @@ namespace Unbound_MediaMate
                      _mediaPlayer.State != VLCState.Opening && _mediaPlayer.State != VLCState.NothingSpecial);
         }
 
+
+        /*
+        * Method:      Stop_Executed()
+        * Description: This method contains the logic behind stopping media.
+        * Parameters:  object sender: The object that raised the event
+        *              ExecutedRoutedEventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void Stop_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             const int kDefaultProgress = 0; // The default slide bar progress when videos are stopped
@@ -263,11 +361,27 @@ namespace Unbound_MediaMate
             }
         } */
 
+
+        /*
+        * Method:      sliProgress_DragStarted()
+        * Description: This method sets flag if user is dragging slider
+        * Parameters:  object sender: The object that raised the event
+        *              DragStartedEventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void sliProgress_DragStarted(object sender, DragStartedEventArgs e)
         {
             isUserDraggingSlider = true;
         }
 
+
+        /*
+        * Method:      sliProgress_DragCompleted()
+        * Description: This method sets flag if drag is completed. Sets runback time of media to new slider value
+        * Parameters:  object sender: The object that raised the event
+        *              DragCompletedEventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void sliProgress_DragCompleted(object sender, DragCompletedEventArgs e)
         {
             // Resetting slider drag to false
@@ -276,10 +390,15 @@ namespace Unbound_MediaMate
             _mediaPlayer.Time = (long)sliProgress.Value;
         }
 
+        /*
+        * Method:      sliProgress_ValueChanged()
+        * Description: This method updates the label to show the current playback time in a format of hours:minutes:seconds based on the value of the sliProgress slider
+        * Parameters:  object sender: The object that raised the event
+        *              RoutedPropertyChangedEventArgs e: Event specific behavior
+        * Returns:     Void.
+        */
         private void sliProgress_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-         
-            // Updates the label to show the current playback time in a format of hours:minutes:seconds based on the value of the sliProgress slider
             lblProgressStatus.Text = TimeSpan.FromMilliseconds(sliProgress.Value).ToString(@"hh\:mm\:ss");
         }
 
